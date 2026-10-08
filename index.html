@@ -3,16 +3,396 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Rhodium45 Smart Portfolio</title>
 
-  <meta http-equiv="refresh" content="0; url=frontend/">
-</head>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-<body>
-  <p>Loading Rhodium45 Smart Portfolio...</p>
+    html {
+      scroll-behavior: smooth;
+    }
 
-  <script>
-    window.location.href = "frontend/";
-  </script>
-</body>
-</html>
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #fff;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(92, 110, 255, .22), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(180, 90, 255, .18), transparent 30%),
+        linear-gradient(135deg, #050816, #0b1024 50%, #040610);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    .container {
+      width: min(1180px, 92%);
+      margin: auto;
+    }
+
+    header {
+      padding: 24px 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px;
+      background: rgba(10,15,38,.65);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+    }
+
+    .mini-logo {
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 8px 25px rgba(255,255,255,.15);
+    }
+
+    .brand-text span {
+      display: block;
+      color: #8f9aba;
+      font-size: 10px;
+      letter-spacing: 2px;
+      margin-top: 3px;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .connect {
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 13px;
+      color: white;
+      background: linear-gradient(135deg, #596cff, #8b55ff);
+      box-shadow: 0 10px 30px rgba(100,90,255,.3);
+    }
+
+    .hero {
+      min-height: 650px;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 50px;
+      padding: 60px 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 100px;
+      color: #aeb9dc;
+      background: rgba(255,255,255,.045);
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 7vw, 82px);
+      line-height: .95;
+      letter-spacing: -4px;
+      margin-bottom: 25px;
+    }
+
+    .gradient {
+      background: linear-gradient(90deg,#fff,#9aa9ff,#d19aff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
+      max-width: 600px;
+      color: #a8b1ca;
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .primary,
+    .secondary {
+      padding: 14px 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .primary {
+      color: white;
+      background: linear-gradient(135deg,#5669ff,#8b51ff);
+    }
+
+    .secondary {
+      color: #dbe0f3;
+      background: rgba(255,255,255,.05);
+    }
+
+    .scene {
+      height: 500px;
+      display: grid;
+      place-items: center;
+      perspective: 1200px;
+    }
+
+    .coin-wrap {
+      position: relative;
+      width: 330px;
+      height: 330px;
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .coin {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      transform: rotateX(12deg) rotateY(-18deg);
+      box-shadow:
+        0 45px 90px rgba(0,0,0,.65),
+        0 0 80px rgba(130,140,255,.28);
+    }
+
+    .rh45-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      box-shadow:
+        inset 0 0 30px rgba(255,255,255,.3),
+        0 0 35px rgba(255,255,255,.12);
+    }
+
+    .orbit {
+      position: absolute;
+      inset: -45px;
+      border: 1px solid rgba(151,160,255,.3);
+      border-radius: 50%;
+      transform: rotateX(68deg);
+      animation: spin 10s linear infinite;
+    }
+
+    .orbit::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #a69aff;
+      box-shadow: 0 0 25px #a69aff;
+      top: 30px;
+      left: 50%;
+    }
+
+    .floating-card {
+      position: absolute;
+      padding: 15px 17px;
+      min-width: 145px;
+      border-radius: 17px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(15,20,45,.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+
+    .floating-card small {
+      display: block;
+      color: #8894b7;
+      margin-bottom: 5px;
+    }
+
+    .floating-card strong {
+      font-size: 20px;
+    }
+
+    .card-one {
+      right: -20px;
+      top: 45px;
+    }
+
+    .card-two {
+      left: -45px;
+      bottom: 55px;
+    }
+
+    .section {
+      padding: 75px 0;
+    }
+
+    .section-title {
+      margin-bottom: 30px;
+    }
+
+    .section-title small {
+      color: #8e9abc;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .section-title h2 {
+      font-size: 38px;
+      margin-top: 8px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      padding: 25px;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.045);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 25px 70px rgba(0,0,0,.25);
+    }
+
+    .allocation {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .donut {
+      width: 165px;
+      height: 165px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #8791ff 0 50%,
+        #c291ff 50% 80%,
+        #555f7b 80% 100%
+      );
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .donut::after {
+      content: "";
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: #0c1126;
+      position: absolute;
+    }
+
+    .donut-label {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .donut-label strong {
+      font-size: 26px;
+      display: block;
+    }
+
+    .donut-label small {
+      color: #8e99b8;
+    }
+
+    .asset {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .asset:last-child {
+      border-bottom: 0;
+    }
+
+    .asset-name {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .asset-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.08);
+      font-weight: 800;
+    }
+
+    .asset small {
+      display: block;
+      color: #7e89a7;
+      margin-top: 3px;
+    }
+
+    .positive {
+      color: #91e0ba;
+    }
+
+    .rebalance {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 13px;
+      background: linear-gradient(135deg,#5669ff,#9b58ff);
+      color: white;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 13px;
+      border-radius: 12px;
+      color: #aeb8d5;
+      background: rgba(255,255,255,.04);
+      font-size: 13px;
+      display: none;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 18px;
+    }
+
+    .feature {
+      padding: 25px;
+      min-height: 180px;
+      border: 1px solid rgba(255,255,255,.09);
