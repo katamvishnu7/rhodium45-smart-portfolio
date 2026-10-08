@@ -623,12 +623,76 @@ function simulateTransaction() {
   status.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-function previewRebalance() {
+ function previewRebalance() {
   const status = document.getElementById("status");
 
+  const value = Number(
+    prompt("Enter your portfolio value in USD:", "10000")
+  );
+
+  if (!value || value <= 0) {
+    alert("Please enter a valid portfolio value.");
+    return;
+  }
+
+  const rh45 = Number(
+    prompt("Current RH45 allocation (%):", "60")
+  );
+
+  const stock = Number(
+    prompt("Current Tokenized Stock allocation (%):", "20")
+  );
+
+  const reserve = Number(
+    prompt("Current BNB / Stablecoin allocation (%):", "20")
+  );
+
+  const total = rh45 + stock + reserve;
+
+  if (Math.abs(total - 100) > 0.01) {
+    alert(
+      "Your allocations must add up to 100%. Current total: " +
+      total.toFixed(2) +
+      "%"
+    );
+    return;
+  }
+
+  const targetRH45 = value * 0.50;
+  const targetStock = value * 0.30;
+  const targetReserve = value * 0.20;
+
+  const currentRH45 = value * rh45 / 100;
+  const currentStock = value * stock / 100;
+  const currentReserve = value * reserve / 100;
+
+  const rh45Change = targetRH45 - currentRH45;
+  const stockChange = targetStock - currentStock;
+  const reserveChange = targetReserve - currentReserve;
+
+  function formatChange(amount) {
+    if (amount > 0) {
+      return "Buy $" + amount.toFixed(2);
+    }
+
+    if (amount < 0) {
+      return "Sell $" + Math.abs(amount).toFixed(2);
+    }
+
+    return "No change";
+  }
+
   status.style.display = "block";
-  status.textContent =
-    "Rebalance preview: RH45 50% • Tokenized Stock 30% • BNB / Stablecoin 20%.";
+
+  status.innerHTML =
+    "<strong>Rebalance Recommendation</strong><br><br>" +
+    "RH45: " + formatChange(rh45Change) + "<br>" +
+    "Tokenized Stock: " + formatChange(stockChange) + "<br>" +
+    "BNB / Stablecoin: " + formatChange(reserveChange) +
+    "<br><br>" +
+    "<strong>Target:</strong> RH45 50% • Tokenized Stock 30% • BNB / Stablecoin 20%" +
+    "<br><br>" +
+    "Simulation only — no live transaction has been executed.";
 }
 </script>
 
