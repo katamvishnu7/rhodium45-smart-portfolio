@@ -1,3 +1,4 @@
+Deployment refresh - Rhodium45 Smart Protfolio MVP 
 # Rhodium45 Smart Portfolio
 
 Rhodium45 Smart Portfolio is a BSC-focused cross-asset portfolio application combining RH45 with eligible tokenized stocks.
