@@ -879,6 +879,105 @@ function selectStock(stockName) {
     "Simulation only — no live transaction has been executed.";
 }
 </script>
+<!-- ALLOCATION OVERVIEW -->
+<section>
+  <div class="container">
 
+    <div class="card" style="margin-top:30px;">
+
+      <h2 class="section-title">Allocation Overview</h2>
+
+      <p class="section-subtitle">
+        Current demo portfolio allocation.
+      </p>
+
+      <div style="
+        display:grid;
+        grid-template-columns:180px 1fr;
+        gap:35px;
+        align-items:center;
+      ">
+
+        <div style="
+          width:170px;
+          height:170px;
+          border-radius:50%;
+          background:conic-gradient(
+            #ffffff 0deg 180deg,
+            #777777 180deg 288deg,
+            #3f3f46 288deg 360deg
+          );
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        ">
+
+          <div style="
+            width:105px;
+            height:105px;
+            border-radius:50%;
+            background:#101116;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            font-weight:800;
+          ">
+            RH45<br>50%
+          </div>
+
+        </div>
+
+        <div>
+
+          <div style="margin-bottom:18px;">
+            <strong>RH45 — 50%</strong>
+            <div style="
+              height:8px;
+              margin-top:7px;
+              border-radius:10px;
+              background:#ffffff;
+              width:100%;
+            "></div>
+          </div>
+
+          <div style="margin-bottom:18px;">
+            <strong>Tokenized Stock — 30%</strong>
+            <div style="
+              height:8px;
+              margin-top:7px;
+              border-radius:10px;
+              background:#777777;
+              width:60%;
+            "></div>
+          </div>
+
+          <div>
+            <strong>BNB / Stablecoin — 20%</strong>
+            <div style="
+              height:8px;
+              margin-top:7px;
+              border-radius:10px;
+              background:#3f3f46;
+              width:40%;
+            "></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <p style="
+        margin-top:25px;
+        color:#9999a5;
+        font-size:13px;
+      ">
+        Demo allocation only — no live trading or investment advice.
+      </p>
+
+    </div>
+
+  </div>
+</section>
 </body>
 </html>
