@@ -346,6 +346,71 @@ footer {
   font-size: 13px;
 }
 
+/* TOKENIZED STOCK DISCOVERY */
+
+.stock-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.stock-card {
+  border: 1px solid rgba(255,255,255,0.11);
+  background: rgba(255,255,255,0.055);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 22px;
+  padding: 24px;
+}
+
+.stock-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.stock-symbol {
+  font-size: 13px;
+  color: #9999a5;
+}
+
+.stock-price {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.stock-change {
+  color: #bdbdc7;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.stock-tag {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: #bdbdc7;
+  font-size: 11px;
+  margin-bottom: 18px;
+}
+
+.stock-btn {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 11px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.stock-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
 /* MOBILE */
 
 @media (max-width: 850px) {
@@ -520,6 +585,60 @@ footer {
 
 
 <section>
+  <section>
+  <div class="container">
+
+    <h2 class="section-title">Tokenized Stock Discovery</h2>
+
+    <p class="section-subtitle">
+      Explore example tokenized assets that can be considered for the portfolio.
+    </p>
+
+    <div class="stock-grid">
+
+      <div class="stock-card">
+        <div class="stock-top">
+          <strong>Apple</strong>
+          <span class="stock-symbol">AAPL</span>
+        </div>
+        <div class="stock-price">$185.20</div>
+        <div class="stock-change">Reference price • Demo data</div>
+        <span class="stock-tag">Technology</span>
+        <button class="stock-btn" onclick="selectStock('Apple (AAPL)')">
+          Add to Portfolio
+        </button>
+      </div>
+
+      <div class="stock-card">
+        <div class="stock-top">
+          <strong>Tesla</strong>
+          <span class="stock-symbol">TSLA</span>
+        </div>
+        <div class="stock-price">$245.80</div>
+        <div class="stock-change">Reference price • Demo data</div>
+        <span class="stock-tag">Automotive / Technology</span>
+        <button class="stock-btn" onclick="selectStock('Tesla (TSLA)')">
+          Add to Portfolio
+        </button>
+      </div>
+
+      <div class="stock-card">
+        <div class="stock-top">
+          <strong>Microsoft</strong>
+          <span class="stock-symbol">MSFT</span>
+        </div>
+        <div class="stock-price">$420.10</div>
+        <div class="stock-change">Reference price • Demo data</div>
+        <span class="stock-tag">Technology</span>
+        <button class="stock-btn" onclick="selectStock('Microsoft (MSFT)')">
+          Add to Portfolio
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
   <div class="container">
 
     <h2 class="section-title">Smart Portfolio Features</h2>
@@ -624,6 +743,18 @@ function simulateTransaction() {
 }
 
  function previewRebalance() {
+   function selectStock(stockName) {
+  const status = document.getElementById("status");
+
+  status.style.display = "block";
+
+  status.innerHTML =
+    "<strong>Asset Selected</strong><br><br>" +
+    stockName +
+    " has been selected for your portfolio." +
+    "<br><br>" +
+    "Demo selection only — no real purchase has been executed.";
+}
   const status = document.getElementById("status");
 
   const value = Number(
