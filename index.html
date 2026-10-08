@@ -764,8 +764,9 @@ function simulateTransaction() {
 }
 
  function previewRebalance() {
-   function selectStock(stockName) {
+function selectStock(stockName) {
   const status = document.getElementById("status");
+  const selectedAssets = document.getElementById("selectedAssets");
 
   status.style.display = "block";
 
@@ -775,6 +776,37 @@ function simulateTransaction() {
     " has been selected for your portfolio." +
     "<br><br>" +
     "Demo selection only — no real purchase has been executed.";
+
+  if (selectedAssets) {
+    const existing = selectedAssets.querySelector(
+      '[data-asset="' + stockName + '"]'
+    );
+
+    if (!existing) {
+      const empty = selectedAssets.querySelector(".empty-assets");
+      if (empty) empty.remove();
+
+      const asset = document.createElement("div");
+
+      asset.setAttribute("data-asset", stockName);
+      asset.style.display = "flex";
+      asset.style.justifyContent = "space-between";
+      asset.style.alignItems = "center";
+      asset.style.padding = "12px";
+      asset.style.marginBottom = "10px";
+      asset.style.border = "1px solid rgba(255,255,255,0.12)";
+      asset.style.borderRadius = "10px";
+      asset.style.background = "rgba(255,255,255,0.05)";
+
+      asset.innerHTML =
+        "<strong>" + stockName + "</strong>" +
+        "<button onclick=\"this.parentElement.remove()\" " +
+        "style=\"padding:6px 10px;border-radius:8px;border:0;cursor:pointer;\">" +
+        "Remove</button>";
+
+      selectedAssets.appendChild(asset);
+    }
+  }
 }
   const status = document.getElementById("status");
 
