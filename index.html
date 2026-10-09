@@ -740,144 +740,147 @@ footer {
 </footer>
 
 
-<script>
+ <script>
+const RH45_WORKER_URL =
+  "https://rh45-binance-api.katamvishnu6.workers.dev";
+
 function connectWallet() {
-  alert(
-    "Wallet connection is a prototype feature for this MVP."
-  );
+  alert("Wallet connection is a prototype feature. No wallet was connected.");
 }
 
 function scrollToPortfolio() {
-  document
-    .getElementById("portfolio")
+  document.getElementById("portfolio")
     .scrollIntoView({ behavior: "smooth" });
 }
 
-function simulateTransaction() {
+function showStatus(title, message) {
   const status = document.getElementById("status");
+  status.style.display = "block";
+  status.textContent = title + " — " + message;
+}
+
+function simulateTransaction() {
+  showStatus(
+    "Transaction simulation ready",
+    "Demo only. No live transaction was executed."
+  );
+}
+
+function selectStock(stockName) {
+  const selectedAssets = document.getElementById("selectedAssets");
+  const status = document.getElementById("status");
+
+  if (!selectedAssets) return;
+
+  if (!selectedAssets.querySelector(
+    "[data-asset='" + stockName + "']"
+  )) {
+    const emptyMessage = selectedAssets.querySelector(".empty-assets");
+    if (emptyMessage) emptyMessage.remove();
+
+    const firstMessage = selectedAssets.querySelector("p");
+    if (firstMessage &&
+        firstMessage.textContent.includes("No assets selected")) {
+      firstMessage.remove();
+    }
+
+    const asset = document.createElement("div");
+    asset.dataset.asset = stockName;
+    asset.style.cssText =
+      "display:flex;justify-content:space-between;align-items:center;" +
+      "gap:12px;padding:12px;margin-bottom:10px;" +
+      "border:1px solid rgba(255,255,255,.12);border-radius:10px;" +
+      "background:rgba(255,255,255,.05)";
+
+    const name = document.createElement("strong");
+    name.textContent = stockName;
+
+    const remove = document.createElement("button");
+    remove.textContent = "Remove";
+    remove.style.cssText =
+      "padding:6px 10px;border-radius:8px;border:0;cursor:pointer";
+
+    remove.addEventListener("click", () => {
+      asset.remove();
+
+      if (!selectedAssets.querySelector("[data-asset]")) {
+        selectedAssets.innerHTML =
+          '<p style="color:#9999a5">No assets selected yet.</p>';
+      }
+    });
+
+    asset.append(name, remove);
+    selectedAssets.appendChild(asset);
+  }
 
   status.style.display = "block";
   status.textContent =
-    "Transaction simulation ready — no live transaction has been executed.";
-  
-  status.scrollIntoView({ behavior: "smooth", block: "center" });
+    stockName + " selected. Demo only; no purchase was made.";
 }
 
- function previewRebalance() {
-function selectStock(stockName) {
-  const status = document.getElementById("status");
-  const selectedAssets = document.getElementById("selectedAssets");
-
-  status.style.display = "block";
-
-  status.innerHTML =
-    "<strong>Asset Selected</strong><br><br>" +
-    stockName +
-    " has been selected for your portfolio." +
-    "<br><br>" +
-    "Demo selection only — no real purchase has been executed.";
-
-  if (selectedAssets) {
-    const existing = selectedAssets.querySelector(
-      '[data-asset="' + stockName + '"]'
-    );
-
-    if (!existing) {
-      const empty = selectedAssets.querySelector(".empty-assets");
-      if (empty) empty.remove();
-
-      const asset = document.createElement("div");
-
-      asset.setAttribute("data-asset", stockName);
-      asset.style.display = "flex";
-      asset.style.justifyContent = "space-between";
-      asset.style.alignItems = "center";
-      asset.style.padding = "12px";
-      asset.style.marginBottom = "10px";
-      asset.style.border = "1px solid rgba(255,255,255,0.12)";
-      asset.style.borderRadius = "10px";
-      asset.style.background = "rgba(255,255,255,0.05)";
-
-      asset.innerHTML =
-        "<strong>" + stockName + "</strong>" +
-        "<button onclick=\"this.parentElement.remove()\" " +
-        "style=\"padding:6px 10px;border-radius:8px;border:0;cursor:pointer;\">" +
-        "Remove</button>";
-
-      selectedAssets.appendChild(asset);
-    }
-  }
-}
-  const status = document.getElementById("status");
-
+function previewRebalance() {
   const value = Number(
     prompt("Enter your portfolio value in USD:", "10000")
   );
 
-  if (!value || value <= 0) {
+  if (!Number.isFinite(value) || value <= 0) {
     alert("Please enter a valid portfolio value.");
     return;
   }
 
-  const rh45 = Number(
-    prompt("Current RH45 allocation (%):", "60")
-  );
+  const rh45 = Number(prompt("Current RH45 allocation (%):", "60"));
+  const stock = Number(prompt("Current Tokenized Stock allocation (%):", "20"));
+  const reserve = Number(prompt("Current BNB / Stablecoin allocation (%):", "20"));
 
-  const stock = Number(
-    prompt("Current Tokenized Stock allocation (%):", "20")
-  );
+  const allocations = [rh45, stock, reserve];
 
-  const reserve = Number(
-    prompt("Current BNB / Stablecoin allocation (%):", "20")
-  );
-
-  const total = rh45 + stock + reserve;
-
-  if (Math.abs(total - 100) > 0.01) {
-    alert(
-      "Your allocations must add up to 100%. Current total: " +
-      total.toFixed(2) +
-      "%"
-    );
+  if (
+    allocations.some(n => !Number.isFinite(n) || n < 0) ||
+    Math.abs(rh45 + stock + reserve - 100) > 0.01
+  ) {
+    alert("Enter non-negative allocations that add up to 100%.");
     return;
   }
 
-  const targetRH45 = value * 0.50;
-  const targetStock = value * 0.30;
-  const targetReserve = value * 0.20;
-
-  const currentRH45 = value * rh45 / 100;
-  const currentStock = value * stock / 100;
-  const currentReserve = value * reserve / 100;
-
-  const rh45Change = targetRH45 - currentRH45;
-  const stockChange = targetStock - currentStock;
-  const reserveChange = targetReserve - currentReserve;
-
-  function formatChange(amount) {
-    if (amount > 0) {
-      return "Buy $" + amount.toFixed(2);
-    }
-
-    if (amount < 0) {
-      return "Sell $" + Math.abs(amount).toFixed(2);
-    }
-
+  function change(current, target) {
+    const amount = value * (target - current) / 100;
+    if (amount > 0.005) return "Increase by $" + amount.toFixed(2);
+    if (amount < -0.005) return "Decrease by $" + Math.abs(amount).toFixed(2);
     return "No change";
   }
 
+  const status = document.getElementById("status");
   status.style.display = "block";
-
   status.innerHTML =
     "<strong>Rebalance Recommendation</strong><br><br>" +
-    "RH45: " + formatChange(rh45Change) + "<br>" +
-    "Tokenized Stock: " + formatChange(stockChange) + "<br>" +
-    "BNB / Stablecoin: " + formatChange(reserveChange) +
-    "<br><br>" +
-    "<strong>Target:</strong> RH45 50% • Tokenized Stock 30% • BNB / Stablecoin 20%" +
-    "<br><br>" +
-    "Simulation only — no live transaction has been executed.";
+    "RH45: " + change(rh45, 50) + "<br>" +
+    "Tokenized Stock: " + change(stock, 30) + "<br>" +
+    "BNB / Stablecoin: " + change(reserve, 20) +
+    "<br><br>Target: RH45 50% • Tokenized Stock 30% • Reserve 20%" +
+    "<br><br>Simulation only — no live trade was executed.";
 }
+
+async function checkRwaBackend() {
+  try {
+    const response = await fetch(RH45_WORKER_URL + "/api/rwa");
+    const result = await response.json();
+
+    if (response.ok && result.ok && result.source === "binance") {
+      console.info("RH45 backend responded with Binance data.", result);
+    } else {
+      console.info(
+        "RH45 is using demo stock cards. Live RWA data is unavailable.",
+        result
+      );
+    }
+  } catch (error) {
+    console.warn(
+      "RH45 backend could not be reached. Demo stock cards remain available."
+    );
+  }
+}
+
+document.addEventListener("DOMContentLoaded", checkRwaBackend);
 </script>
 <!-- ALLOCATION OVERVIEW -->
 <section>
